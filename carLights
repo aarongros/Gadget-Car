@@ -1,0 +1,127 @@
+//https://www.youtube.com/watch?v=rwz71eXZiJQ
+int back_left_1 = 3;
+int back_left_2 = 4;
+int back_left_3 = 5;
+int back_right_1 = 6;
+int back_right_2 = 7;
+int back_right_3 = 8;
+int front_light = 9;
+
+int recieve = 10;
+
+boolean turning_left = false;
+boolean turning_right = false;
+boolean hazards = false;
+boolean brakeing = false;
+boolean headlights = false;
+
+//////////////////////////////////////////////////////////////////////////////////
+void setup()  {
+  pinMode(back_left_1, OUTPUT);
+  pinMode(back_left_2, OUTPUT);
+  pinMode(back_left_3, OUTPUT);
+  pinMode(back_right_1, OUTPUT);
+  pinMode(back_right_2, OUTPUT);
+  pinMode(back_right_3, OUTPUT);
+  pinMode(front_light, OUTPUT);
+  
+  pinMode(recieve, INPUT);
+}
+//////////////////////////////////////////////////////////////////////////////////
+void loop() {
+  if(turning_left)  {
+    if(brakeing)  {
+      brakeAndTurnLeft();
+    }
+    else  {
+      turnLeftBlincker();
+    }
+  }
+  
+  if(turning_right)  {
+    if(brakeing)  {
+      brakeAndTurnRight();
+    }
+    else  {
+      turnRightBlincker();
+    }
+  }
+  
+  if(!(turning_left || turning_right) && brakeing) {
+    brakeLights();
+  }
+  
+  if(hazards) {
+  hazardBlincker();
+  }
+  
+  if(headlights)  {
+    headlights();
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////
+turnLeftBlincker()  {
+  digitalWrite(back_left_1, HIGH);
+  wait(500);
+  digitalWrite(back_left_2, HIGH);
+  wait(500);
+  digitalWrite(back_left_3, HIGH);
+  wait(750);
+  digitalWrite(back_left_1, LOW);
+  digitalWrite(back_left_2, LOW);
+  digitalWrite(back_left_3, LOW);
+}
+//////////////////////////////////////////////////////////////////////////////////
+turnRightBlincker()  {
+  digitalWrite(back_right_1, HIGH);
+  wait(500);
+  digitalWrite(back_right_2, HIGH);
+  wait(500);
+  digitalWrite(back_right_3, HIGH);
+  wait(750);
+  digitalWrite(back_right_1, LOW);
+  digitalWrite(back_right_2, LOW);
+  digitalWrite(back_right_3, LOW);
+}
+//////////////////////////////////////////////////////////////////////////////////
+hazardBlincker()  {
+  digitalWrite(back_right_1, HIGH);
+  digitalWrite(back_left_1, HIGH);
+  wait(500);
+  digitalWrite(back_right_2, HIGH);
+  digitalWrite(back_left_2, HIGH);
+  wait(500);
+  digitalWrite(back_right_3, HIGH);
+  digitalWrite(back_left_3, HIGH);
+  wait(750);
+  digitalWrite(back_right_1, LOW);
+  digitalWrite(back_left_1, LOW);
+  digitalWrite(back_right_2, LOW);
+  digitalWrite(back_left_2, LOW);
+  digitalWrite(back_right_3, LOW);
+  digitalWrite(back_left_3, LOW);
+}
+//////////////////////////////////////////////////////////////////////////////////
+brakeLights() {
+  digitalWrite(back_right_1, HIGH);
+  digitalWrite(back_left_1, HIGH);
+  wait(500);
+  digitalWrite(back_right_2, HIGH);
+  digitalWrite(back_left_2, HIGH);
+  wait(500);
+  digitalWrite(back_right_3, HIGH);
+  digitalWrite(back_left_3, HIGH);
+  wait(750);
+}
+//////////////////////////////////////////////////////////////////////////////////
+brakeAndTurnRight() {
+  
+}
+//////////////////////////////////////////////////////////////////////////////////
+brakeAndTurnLeft() {
+  
+}
+//////////////////////////////////////////////////////////////////////////////////
+headlights() {
+  
+}
