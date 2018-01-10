@@ -1,4 +1,4 @@
-//https://www.youtube.com/watch?v=rwz71eXZiJQ
+//Link to lights video: https://www.youtube.com/watch?v=rwz71eXZiJQ
 int back_left_1 = 3;
 int back_left_2 = 4;
 int back_left_3 = 5;
@@ -6,15 +6,16 @@ int back_right_1 = 6;
 int back_right_2 = 7;
 int back_right_3 = 8;
 int front_light = 9;
-
-int recieve = 10;
-
-boolean turning_left = false;
-boolean turning_right = false;
-boolean hazards = false;
-boolean brakeing = false;
+int recieve_left = 10;
+int recieve_right = 11;
+int recieve_hazards = 12;
+int recieve_braking = 13;
+int recieve_headlights = 14;
+int waitTime = 500;
+boolean leftAndBraking = false;
+boolean rightAndBraking = false;
+boolean braking = false;
 boolean headlights = false;
-
 //////////////////////////////////////////////////////////////////////////////////
 void setup()  {
   pinMode(back_left_1, OUTPUT);
@@ -24,76 +25,117 @@ void setup()  {
   pinMode(back_right_2, OUTPUT);
   pinMode(back_right_3, OUTPUT);
   pinMode(front_light, OUTPUT);
-  
-  pinMode(recieve, INPUT);
+  pinMode(recieve_left, INPUT);
+  pinMode(recieve_right, INPUT);
+  pinMode(recieve_hazards, INPUT);
+  pinMode(recieve_braking, INPUT);
+  pinMode(recieve_headlights, INPUT);
 }
 //////////////////////////////////////////////////////////////////////////////////
 void loop() {
-  if(turning_left)  {
-    if(brakeing)  {
-      brakeAndTurnLeft();
-    }
-    else  {
-      turnLeftBlincker();
-    }
-  }
-  
-  if(turning_right)  {
-    if(brakeing)  {
-      brakeAndTurnRight();
-    }
-    else  {
-      turnRightBlincker();
-    }
-  }
-  
-  if(!(turning_left || turning_right) && brakeing) {
+  ---------------Braking and Turning--------------
+  if(digitalRead(recieve_braking) == 1 && !braking)  {
     brakeLights();
+    braking = !braking;
   }
-  
-  if(hazards) {
+  else if(digitalRead(recieve_braking) == 0 && braking) {
+    allOff();
+    braking = !braking;
+  }
+  if(digitalRead(recieve_left) == 1)  {
+      turnLeftBlincker();
+      if(braking) {
+       leftAndBraking = true;     
+      }
+  }
+  if(digitalRead(recieve_right) == 1)  {
+      turnRightBlincker();
+      if(braking) {
+       rightAndBraking = true;     
+      }
+  }
+  if(digitalRead(recieve_left) == 0 && leftAndBraking)  {
+    digitalWrite(back_left_1, HIGH);
+    wait(waitTime);
+    digitalWrite(back_left_2, HIGH);
+    wait(waitTime);
+    digitalWrite(back_left_3, HIGH);
+    leftAndBraking = false;     
+      
+  } 
+  if(digitalRead(recieve_right) == 0 && rightAndBraking)  {
+    digitalWrite(back_right_1, HIGH);
+    wait(waitTime);
+    digitalWrite(back_right_2, HIGH);
+    wait(waitTime);
+    digitalWrite(back_right_3, HIGH);
+    rightAndBraking = false;
+  }
+  ----------------------Hazards---------------------
+  if(digitalRead(recieve_hazards) == 1) {
   hazardBlincker();
   }
-  
-  if(headlights)  {
-    headlights();
+  ---------------------HeadLights-------------------
+  if(digitalRead(recieve_headlights) == 1 && !headlights)  {
+    digitalWrite(front_light,HIGH);
+    headlights = !headlights;
   }
+  else if(digitalRead(recieve_headlights) == 0 && headlights) {
+    digitalWrite(front_light,LOW);
+    headlights = !headlights;
+  }
+  ---------------------------------------------------
 }
 //////////////////////////////////////////////////////////////////////////////////
 turnLeftBlincker()  {
   digitalWrite(back_left_1, HIGH);
-  wait(500);
+  wait(waitTime);
   digitalWrite(back_left_2, HIGH);
-  wait(500);
+  wait(waitTime);
   digitalWrite(back_left_3, HIGH);
-  wait(750);
-  digitalWrite(back_left_1, LOW);
-  digitalWrite(back_left_2, LOW);
-  digitalWrite(back_left_3, LOW);
+  wait(waitTime);
+  leftOff();
+  wait(waitTime);
 }
 //////////////////////////////////////////////////////////////////////////////////
 turnRightBlincker()  {
   digitalWrite(back_right_1, HIGH);
-  wait(500);
+  wait(waitTime);
   digitalWrite(back_right_2, HIGH);
-  wait(500);
+  wait(waitTime);
   digitalWrite(back_right_3, HIGH);
-  wait(750);
-  digitalWrite(back_right_1, LOW);
-  digitalWrite(back_right_2, LOW);
-  digitalWrite(back_right_3, LOW);
+  wait(waitTime);
+  rightOff();
+  wait(waitTime);
 }
 //////////////////////////////////////////////////////////////////////////////////
 hazardBlincker()  {
   digitalWrite(back_right_1, HIGH);
   digitalWrite(back_left_1, HIGH);
-  wait(500);
+  wait(waitTime);
   digitalWrite(back_right_2, HIGH);
   digitalWrite(back_left_2, HIGH);
-  wait(500);
+  wait(waitTime);
   digitalWrite(back_right_3, HIGH);
   digitalWrite(back_left_3, HIGH);
-  wait(750);
+  wait(waitTime);
+  allOff();
+  wait(waitTime);
+}
+//////////////////////////////////////////////////////////////////////////////////
+brakeLights() {
+  digitalWrite(back_right_1, HIGH);
+  digitalWrite(back_left_1, HIGH);
+  wait(waitTime);
+  digitalWrite(back_right_2, HIGH);
+  digitalWrite(back_left_2, HIGH);
+  wait(waitTime);
+  digitalWrite(back_right_3, HIGH);
+  digitalWrite(back_left_3, HIGH);
+  wait(waitTime);
+}
+//////////////////////////////////////////////////////////////////////////////////
+allOff()  {
   digitalWrite(back_right_1, LOW);
   digitalWrite(back_left_1, LOW);
   digitalWrite(back_right_2, LOW);
@@ -102,26 +144,14 @@ hazardBlincker()  {
   digitalWrite(back_left_3, LOW);
 }
 //////////////////////////////////////////////////////////////////////////////////
-brakeLights() {
-  digitalWrite(back_right_1, HIGH);
-  digitalWrite(back_left_1, HIGH);
-  wait(500);
-  digitalWrite(back_right_2, HIGH);
-  digitalWrite(back_left_2, HIGH);
-  wait(500);
-  digitalWrite(back_right_3, HIGH);
-  digitalWrite(back_left_3, HIGH);
-  wait(750);
+leftOff()  {
+  digitalWrite(back_left_1, LOW);
+  digitalWrite(back_left_2, LOW);
+  digitalWrite(back_left_3, LOW);
 }
 //////////////////////////////////////////////////////////////////////////////////
-brakeAndTurnRight() {
-  
-}
-//////////////////////////////////////////////////////////////////////////////////
-brakeAndTurnLeft() {
-  
-}
-//////////////////////////////////////////////////////////////////////////////////
-headlights() {
-  
+rightOff()  {
+  digitalWrite(back_right_1, LOW);
+  digitalWrite(back_right_2, LOW);
+  digitalWrite(back_right_3, LOW);
 }
