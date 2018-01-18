@@ -33,7 +33,7 @@ void setup()  {
 }
 //////////////////////////////////////////////////////////////////////////////////
 void loop() {
-  ---------------Braking and Turning--------------
+  //---------------Braking and Turning--------------
   if(digitalRead(recieve_braking) == 1 && !braking)  {
     brakeLights();
     braking = !braking;
@@ -56,26 +56,26 @@ void loop() {
   }
   if(digitalRead(recieve_left) == 0 && leftAndBraking)  {
     digitalWrite(back_left_1, HIGH);
-    wait(waitTime);
+    delay(waitTime);
     digitalWrite(back_left_2, HIGH);
-    wait(waitTime);
+    delay(waitTime);
     digitalWrite(back_left_3, HIGH);
     leftAndBraking = false;     
       
   } 
   if(digitalRead(recieve_right) == 0 && rightAndBraking)  {
     digitalWrite(back_right_1, HIGH);
-    wait(waitTime);
+    delay(waitTime);
     digitalWrite(back_right_2, HIGH);
-    wait(waitTime);
+    delay(waitTime);
     digitalWrite(back_right_3, HIGH);
     rightAndBraking = false;
   }
-  ----------------------Hazards---------------------
+  //----------------------Hazards---------------------
   if(digitalRead(recieve_hazards) == 1) {
   hazardBlincker();
   }
-  ---------------------HeadLights-------------------
+  //---------------------HeadLights-------------------
   if(digitalRead(recieve_headlights) == 1 && !headlights)  {
     digitalWrite(front_light,HIGH);
     headlights = !headlights;
@@ -84,58 +84,58 @@ void loop() {
     digitalWrite(front_light,LOW);
     headlights = !headlights;
   }
-  ---------------------------------------------------
+  //---------------------------------------------------
 }
 //////////////////////////////////////////////////////////////////////////////////
-turnLeftBlincker()  {
+void turnLeftBlincker()  {
   digitalWrite(back_left_1, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_left_2, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_left_3, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   leftOff();
-  wait(waitTime);
+  delay(waitTime);
 }
 //////////////////////////////////////////////////////////////////////////////////
-turnRightBlincker()  {
+void turnRightBlincker()  {
   digitalWrite(back_right_1, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_right_2, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_right_3, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   rightOff();
-  wait(waitTime);
+  delay(waitTime);
 }
 //////////////////////////////////////////////////////////////////////////////////
-hazardBlincker()  {
+void hazardBlincker()  {
   digitalWrite(back_right_1, HIGH);
   digitalWrite(back_left_1, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_right_2, HIGH);
   digitalWrite(back_left_2, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_right_3, HIGH);
   digitalWrite(back_left_3, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   allOff();
-  wait(waitTime);
+  delay(waitTime);
 }
 //////////////////////////////////////////////////////////////////////////////////
-brakeLights() {
+void brakeLights() {
   digitalWrite(back_right_1, HIGH);
   digitalWrite(back_left_1, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_right_2, HIGH);
   digitalWrite(back_left_2, HIGH);
-  wait(waitTime);
+  delay(waitTime);
   digitalWrite(back_right_3, HIGH);
   digitalWrite(back_left_3, HIGH);
-  wait(waitTime);
+  delay(waitTime);
 }
 //////////////////////////////////////////////////////////////////////////////////
-allOff()  {
+void allOff()  {
   digitalWrite(back_right_1, LOW);
   digitalWrite(back_left_1, LOW);
   digitalWrite(back_right_2, LOW);
@@ -144,13 +144,13 @@ allOff()  {
   digitalWrite(back_left_3, LOW);
 }
 //////////////////////////////////////////////////////////////////////////////////
-leftOff()  {
+void leftOff()  {
   digitalWrite(back_left_1, LOW);
   digitalWrite(back_left_2, LOW);
   digitalWrite(back_left_3, LOW);
 }
 //////////////////////////////////////////////////////////////////////////////////
-rightOff()  {
+void rightOff()  {
   digitalWrite(back_right_1, LOW);
   digitalWrite(back_right_2, LOW);
   digitalWrite(back_right_3, LOW);
