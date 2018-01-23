@@ -7,10 +7,10 @@ int back_right_2 = 7;
 int back_right_3 = 8;
 int front_light = 9;
 int recieve_left = 10;
-int recieve_right = 11;
-int recieve_hazards = 12;
-int recieve_braking = 13;
-int recieve_headlights = 14;
+int recieve_right = 16;
+int recieve_hazards = 14;
+int recieve_braking = 15;
+int recieve_headlights = 2;
 int waitTime = 500;
 boolean leftAndBraking = false;
 boolean rightAndBraking = false;
@@ -110,15 +110,7 @@ void turnRightBlincker()  {
 }
 //////////////////////////////////////////////////////////////////////////////////
 void hazardBlincker()  {
-  digitalWrite(back_right_1, HIGH);
-  digitalWrite(back_left_1, HIGH);
-  delay(waitTime);
-  digitalWrite(back_right_2, HIGH);
-  digitalWrite(back_left_2, HIGH);
-  delay(waitTime);
-  digitalWrite(back_right_3, HIGH);
-  digitalWrite(back_left_3, HIGH);
-  delay(waitTime);
+  brakeLights();
   allOff();
   delay(waitTime);
 }
