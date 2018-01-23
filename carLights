@@ -34,27 +34,27 @@ void setup()  {
 //////////////////////////////////////////////////////////////////////////////////
 void loop() {
   //---------------Braking and Turning--------------
-  if(digitalRead(recieve_braking) == 1 && !braking)  {
+  if(digitalRead(recieve_braking).equals(HIGH) && !braking)  {
     brakeLights();
     braking = !braking;
   }
-  else if(digitalRead(recieve_braking) == 0 && braking) {
+  else if(digitalRead(recieve_braking).equals(LOW) && braking) {
     allOff();
     braking = !braking;
   }
-  if(digitalRead(recieve_left) == 1)  {
+  if(digitalRead(recieve_left).equals(HIGH))  {
       turnLeftBlincker();
       if(braking) {
        leftAndBraking = true;     
       }
   }
-  if(digitalRead(recieve_right) == 1)  {
+  if(digitalRead(recieve_right).equals(HIGH))  {
       turnRightBlincker();
       if(braking) {
        rightAndBraking = true;     
       }
   }
-  if(digitalRead(recieve_left) == 0 && leftAndBraking)  {
+  if(digitalRead(recieve_left).equals(LOW) && leftAndBraking)  {
     digitalWrite(back_left_1, HIGH);
     delay(waitTime);
     digitalWrite(back_left_2, HIGH);
@@ -63,7 +63,7 @@ void loop() {
     leftAndBraking = false;     
       
   } 
-  if(digitalRead(recieve_right) == 0 && rightAndBraking)  {
+  if(digitalRead(recieve_right).equals(LOW) && rightAndBraking)  {
     digitalWrite(back_right_1, HIGH);
     delay(waitTime);
     digitalWrite(back_right_2, HIGH);
@@ -72,15 +72,15 @@ void loop() {
     rightAndBraking = false;
   }
   //----------------------Hazards---------------------
-  if(digitalRead(recieve_hazards) == 1) {
+  if(digitalRead(recieve_hazards).equals(HIGH)) {
   hazardBlincker();
   }
   //---------------------HeadLights-------------------
-  if(digitalRead(recieve_headlights) == 1 && !headlights)  {
+  if(digitalRead(recieve_headlights).equals(HIGH) && !headlights)  {
     digitalWrite(front_light,HIGH);
     headlights = !headlights;
   }
-  else if(digitalRead(recieve_headlights) == 0 && headlights) {
+  else if(digitalRead(recieve_headlights).equals(LOW) && headlights) {
     digitalWrite(front_light,LOW);
     headlights = !headlights;
   }
