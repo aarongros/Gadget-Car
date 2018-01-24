@@ -1,149 +1,146 @@
 //Link to lights video: https://www.youtube.com/watch?v=rwz71eXZiJQ
-int back_left_1 = 3;
-int back_left_2 = 4;
-int back_left_3 = 5;
-int back_right_1 = 6;
-int back_right_2 = 7;
-int back_right_3 = 8;
-int front_light = 9;
-int recieve_left = 10;
-int recieve_right = 16;
-int recieve_hazards = 14;
-int recieve_braking = 15;
-int recieve_headlights = 2;
+int leftLights[3] = {3,4,5};
+int rightLights[3] = {6,7,8};
+int headlights = 9;
+int leftInput = 10;
+int rightInput = 16;
+int hazardsInput = 14;
+int brakingInput = 15;
+int headlightsInput = 2;
 int waitTime = 500;
 boolean leftAndBraking = false;
 boolean rightAndBraking = false;
-boolean braking = false;
-boolean headlights = false;
-//////////////////////////////////////////////////////////////////////////////////
+boolean brakingOn = false;
+boolean headlightsOn = false;
+////////////////Setup the headlights, back lights, and all the inputs describing the state of each function
 void setup()  {
-  pinMode(back_left_1, OUTPUT);
-  pinMode(back_left_2, OUTPUT);
-  pinMode(back_left_3, OUTPUT);
-  pinMode(back_right_1, OUTPUT);
-  pinMode(back_right_2, OUTPUT);
-  pinMode(back_right_3, OUTPUT);
-  pinMode(front_light, OUTPUT);
-  pinMode(recieve_left, INPUT);
-  pinMode(recieve_right, INPUT);
-  pinMode(recieve_hazards, INPUT);
-  pinMode(recieve_braking, INPUT);
-  pinMode(recieve_headlights, INPUT);
+  for(int i = 0; i < 3; i++)  {
+    pinMode(leftLights[i], OUTPUT);
+    pinMode(rightLights[i], OUTPUT);
+  }
+  pinMode(headlights, OUTPUT);
+  pinMode(leftInput, INPUT);
+  pinMode(rightInput, INPUT);
+  pinMode(hazardsInput, INPUT);
+  pinMode(brakingInput, INPUT);
+  pinMode(headlightsInput, INPUT);
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Loops cheching if any on the functions should run
 void loop() {
-  //---------------Braking and Turning--------------
-  if(digitalRead(recieve_braking).equals(HIGH) && !braking)  {
-    brakeLights();
-    braking = !braking;
+  checkBraking();
+  checkTurning();
+  checkTurningAndBraking();
+  checkHazards();
+  checkHeadLights();
+}
+////////////////Checks if headlights should change state and changes it if necessary
+void checkHeadLights()  {
+  if(digitalRead(headlightsInput).equals(HIGH) && !headlightsOn)  {
+    digitalWrite(headlights,HIGH);
+    headlightsOn = !headlightsOn;
   }
-  else if(digitalRead(recieve_braking).equals(LOW) && braking) {
-    allOff();
-    braking = !braking;
+  else if(digitalRead(headlightsInput).equals(LOW) && headlightsOn) {
+    digitalWrite(headlights,LOW);
+    headlightsOn = !headlightsOn;
   }
-  if(digitalRead(recieve_left).equals(HIGH))  {
+}
+////////////////Checks if the hazards should change state and changes it if necessary
+void checkHazards() {
+  if(digitalRead(hazardsInput).equals(HIGH)) {
+    hazardLights();
+  }
+}
+////////////////Checks if the light signals should change state and changes it if necessary
+void checkTurning() {
+  if(digitalRead(leftInput).equals(HIGH))  {
       turnLeftBlincker();
-      if(braking) {
+      if(brakingOn) {
        leftAndBraking = true;     
       }
   }
-  if(digitalRead(recieve_right).equals(HIGH))  {
+  if(digitalRead(rightInput).equals(HIGH))  {
       turnRightBlincker();
-      if(braking) {
+      if(brakingOn) {
        rightAndBraking = true;     
       }
   }
-  if(digitalRead(recieve_left).equals(LOW) && leftAndBraking)  {
-    digitalWrite(back_left_1, HIGH);
-    delay(waitTime);
-    digitalWrite(back_left_2, HIGH);
-    delay(waitTime);
-    digitalWrite(back_left_3, HIGH);
+}
+////////////////Checks if the brake lights should change state and changes it if necessary
+void checkBraking() {
+  if(digitalRead(brakingInput).equals(HIGH) && !brakingOn)  {
+    brakeLights();
+    brakingOn = !brakingOn;
+  }
+  else if(digitalRead(brakingInput).equals(LOW) && brakingOn) {
+    allOff();
+    brakingOn = !brakingOn;
+  }
+}
+////////////////Makes sure there are no errors when turning and braking
+checkTurningAndBraking()  {
+  if(digitalRead(leftInput).equals(LOW) && leftAndBraking)  {
+    for(int tb = 0; tb < 0; tb++)  {
+      digitalWrite(leftLights[tb], HIGH);
+      delay(waitTime);
+    }
     leftAndBraking = false;     
-      
   } 
-  if(digitalRead(recieve_right).equals(LOW) && rightAndBraking)  {
-    digitalWrite(back_right_1, HIGH);
-    delay(waitTime);
-    digitalWrite(back_right_2, HIGH);
-    delay(waitTime);
-    digitalWrite(back_right_3, HIGH);
+  if(digitalRead(rightInput).equals(LOW) && rightAndBraking)  {
+    for(int rb = 0; rb < 0; rb++)  {
+      digitalWrite(rightLights[rb], HIGH);
+      delay(waitTime);
+    }
     rightAndBraking = false;
   }
-  //----------------------Hazards---------------------
-  if(digitalRead(recieve_hazards).equals(HIGH)) {
-  hazardBlincker();
-  }
-  //---------------------HeadLights-------------------
-  if(digitalRead(recieve_headlights).equals(HIGH) && !headlights)  {
-    digitalWrite(front_light,HIGH);
-    headlights = !headlights;
-  }
-  else if(digitalRead(recieve_headlights).equals(LOW) && headlights) {
-    digitalWrite(front_light,LOW);
-    headlights = !headlights;
-  }
-  //---------------------------------------------------
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Turns on the left blincker
 void turnLeftBlincker()  {
-  digitalWrite(back_left_1, HIGH);
-  delay(waitTime);
-  digitalWrite(back_left_2, HIGH);
-  delay(waitTime);
-  digitalWrite(back_left_3, HIGH);
-  delay(waitTime);
+  for(int lt = 0; lt < 3; lt++)  {
+    digitalWrite(leftLights[lt], HIGH);
+    delay(waitTime);
+  }
   leftOff();
   delay(waitTime);
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Turns on the right blincker
 void turnRightBlincker()  {
-  digitalWrite(back_right_1, HIGH);
-  delay(waitTime);
-  digitalWrite(back_right_2, HIGH);
-  delay(waitTime);
-  digitalWrite(back_right_3, HIGH);
-  delay(waitTime);
+  for(int rt = 0; rt < 3; rt++)  {
+    digitalWrite(rightLights[rt], HIGH);
+    delay(waitTime);
+  }
   rightOff();
   delay(waitTime);
 }
-//////////////////////////////////////////////////////////////////////////////////
-void hazardBlincker()  {
+////////////////Turns on the hazard lights
+void hazardLights()  {
   brakeLights();
   allOff();
   delay(waitTime);
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Turns on the brake lights
 void brakeLights() {
-  digitalWrite(back_right_1, HIGH);
-  digitalWrite(back_left_1, HIGH);
-  delay(waitTime);
-  digitalWrite(back_right_2, HIGH);
-  digitalWrite(back_left_2, HIGH);
-  delay(waitTime);
-  digitalWrite(back_right_3, HIGH);
-  digitalWrite(back_left_3, HIGH);
-  delay(waitTime);
+  for(int b = 0; b < 3; b++)  {
+    digitalWrite(leftLights[b], HIGH);
+    digitalWrite(rightLights[b], HIGH);
+    delay(waitTime);
+  }
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Turns off all the back lights
 void allOff()  {
-  digitalWrite(back_right_1, LOW);
-  digitalWrite(back_left_1, LOW);
-  digitalWrite(back_right_2, LOW);
-  digitalWrite(back_left_2, LOW);
-  digitalWrite(back_right_3, LOW);
-  digitalWrite(back_left_3, LOW);
+  for(int a = 0; a < 3; a++)  {
+    digitalWrite(leftLights[a], LOW);
+    digitalWrite(rightLights[a], LOW);
+  }
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Turns off all the back left lights
 void leftOff()  {
-  digitalWrite(back_left_1, LOW);
-  digitalWrite(back_left_2, LOW);
-  digitalWrite(back_left_3, LOW);
+  for(int l = 0; l < 3; l++)  {
+    digitalWrite(leftLights[l], LOW);
+  }
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////Turns off all the back right lights
 void rightOff()  {
-  digitalWrite(back_right_1, LOW);
-  digitalWrite(back_right_2, LOW);
-  digitalWrite(back_right_3, LOW);
+  for(int r = 0; r < 3; r++)  {
+    digitalWrite(rightLights[r], LOW);
+  }
 }
