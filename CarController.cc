@@ -20,7 +20,11 @@ void Setup()	{
 
 void Loop()	{
   checkLights();
+	checkDrive();
+	checkTurn();
 }
+
+void checkDrive();
 
 void checkLights()	{
 	checkHazards();
