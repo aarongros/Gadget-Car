@@ -13,23 +13,19 @@ const int LEFT_PWM_STEER = 9;
 #define STEER_INPUT A0;
 int y_value = 0;
 int x_value = 0;
-bool c_button = false;
-bool z_button = false;
 int accel_x = 0;
 int accel_y = 0;
 int accel_z = 0;
 int steer_pot = 0;
+int right_pwm_steer_speed = 0;
+int right_pwm_drive_speed = 0;
+bool c_button = false;
+bool z_button = false;
 bool headLightsOn = false;
 bool brakeLightsOn = false;
 bool leftLightsOn = false;
 bool rightLightsOn = false;
 bool hazardsOn = false;
-
-5 outputs for light
-2 output for steer
-2 output for drive
-1 input for steer pot
-
 
 void Setup()	{
 	pinMode(RIGHT_LIGHT, OUTPUT);
@@ -45,20 +41,23 @@ void Setup()	{
 }
 
 void Loop()	{
-  checkLights();
+	checkLights();
 	checkDrive();
 	checkTurn();
 }
 
 void checkDrive()	{
-	analogRead();
-	analogWrite();
+	right_pwn_drive_speed = y_value * 255 / 1023;
+	analogWrite(RIGHT_PWM_DRIVE, right_pwn_drive_speed);
+	analogWrite(LEFT_PWM_DRIVE, 0);
 }
 
 void checkTurn()	{
-	steer_pot = analogRead();
-	if(!((steet_pot >= 950 && drive > 0) || (steer_pot <= 75 && drive < 0))	{
-		analogWrite();
+	steer_pot = analogRead(STEER_INPUT);
+	right_pwn_steer_speed = x_value * 255 / 1023;
+	if(!((steet_pot >= 950 && right_pwn_steer_speed > 0) || (steer_pot <= 75 && right_pwn_steer_speed < 0))	{
+		analogWrite(RIGHT_PWM_STEER, right_pwn_steer_speed);
+		analogWrite(LEFT_PWM_STEER, 0);
 	}
 }
 
@@ -71,47 +70,57 @@ void checkLights()	{
 }
 
 void checkHeadLights()	{
-	if(!headLightsOn	&&	digitalRead())	{
-		digitalWrite(,HIGH);
+	if(!headLightsOn	&&	digitalRead(HEAD_LIGHT))	{
+		digitalWrite(HEAD_LIGHT, HIGH);
+		headLightsdOn = !headLightsdOn;
 	}
-	else if(headLightsdOn && !digitalRead())	{
-		digitalWrite(,LOW);
+	else if(headLightsdOn && !digitalRead(HEAD_LIGHT))	{
+		digitalWrite(HEAD_LIGHT, LOW);
+		headLightsdOn = !headLightsdOn;
 	}
 }
 
 void checkHazards()	{
-	if(!hazardsOn	&&	digitalRead())	{
-		digitalWrite(,HIGH);
+	if(!hazardsOn	&&	digitalRead(HAZARD_LIGHT))	{
+		digitalWrite(HAZARD_LIGHT, HIGH);
+		hazardsOn = !hazardsOn;
 	}
-	else if(hazardsOn && !digitalRead())	{
-		digitalWrite(,LOW);
+	else if(hazardsOn && !digitalRead(HAZARD_LIGHT))	{
+		digitalWrite(HAZARD_LIGHT, LOW);
+		hazardsOn = !hazardsOn;
 	}
 }
 
 void checkRightLights()	{
-	if(!rightLightsOn	&&	digitalRead())	{
-		digitalWrite(,HIGH);
+	if(!rightLightsOn	&&	digitalRead(RIGHT_LIGHT))	{
+		digitalWrite(RIGHT_LIGHT, HIGH);
+		rightLightsOn = !rightLightsOn;
 	}
-	else if(rightLightsOn && !digitalRead())	{
-		digitalWrite(,LOW);
+	else if(rightLightsOn && !digitalRead(RIGHT_LIGHT))	{
+		digitalWrite(RIGHT_LIGHT, LOW);
+		rightLightsOn = !rightLightsOn;
 	}
 }
 
 void checkLeftLights()	{
-	if(!leftLightsOn	&&	digitalRead())	{
-		digitalWrite(,HIGH);
+	if(!leftLightsOn	&&	digitalRead(LEFT_LIGHT))	{
+		digitalWrite(LEFT_LIGHT, HIGH);
+		leftLightsOn = !leftLightsOn;
 	}
-	else if(leftLightsOn && !digitalRead())	{
-		digitalWrite(,LOW);
+	else if(leftLightsOn && !digitalRead(LEFT_LIGHT))	{
+		digitalWrite(LEFT_LIGHT, LOW);
+		leftLightsOn = !leftLightsOn;
 	}
 }
 
 void checkBrakeLights()	{
-	if(!brakeLightsOn	&&	digitalRead())	{
-		digitalWrite(,HIGH);
+	if(!brakeLightsOn	&&	digitalRead(BRAKE_LIGHT))	{
+		digitalWrite(BRAKE_LIGHT, HIGH);
+		brakeLightsOn = !brakeLightsOn;
 	}
-	else if(brakeLightsdOn && !digitalRead())	{
-		digitalWrite(,LOW);
+	else if(brakeLightsdOn && !digitalRead(BRAKE_LIGHT))	{
+		digitalWrite(BRAKE_LIGHT, LOW);
+		brakeLightsOn = !brakeLightsOn;
 	}
 }
 
