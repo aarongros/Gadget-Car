@@ -1,6 +1,6 @@
 //Needs to send signals to arduino micro vie digital pings 3-7 to tell it which lights to turn on and off
 //needs to recieve bluetooth data from the joystick and the app
-//needs to use that data to steer and change velocity.
+//needs to use that data to steer and change velocity
 const int RIGHT_LIGHT = 3;
 const int LEFT_LIGHT = 4;
 const int BRAKE_LIGHT = 5;
