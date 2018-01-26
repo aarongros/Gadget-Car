@@ -70,7 +70,7 @@ void checkLights()	{
 }
 
 void checkHeadLights()	{
-	if(!headLightsOn	&&	digitalRead(HEAD_LIGHT))	{
+	if(!headLightsOn && digitalRead(HEAD_LIGHT))	{
 		digitalWrite(HEAD_LIGHT, HIGH);
 		headLightsdOn = !headLightsdOn;
 	}
@@ -81,7 +81,7 @@ void checkHeadLights()	{
 }
 
 void checkHazards()	{
-	if(!hazardsOn	&&	digitalRead(HAZARD_LIGHT))	{
+	if(!hazardsOn && digitalRead(HAZARD_LIGHT))	{
 		digitalWrite(HAZARD_LIGHT, HIGH);
 		hazardsOn = !hazardsOn;
 	}
@@ -92,7 +92,7 @@ void checkHazards()	{
 }
 
 void checkRightLights()	{
-	if(!rightLightsOn	&&	digitalRead(RIGHT_LIGHT))	{
+	if(!rightLightsOn && digitalRead(RIGHT_LIGHT))	{
 		digitalWrite(RIGHT_LIGHT, HIGH);
 		rightLightsOn = !rightLightsOn;
 	}
@@ -103,7 +103,7 @@ void checkRightLights()	{
 }
 
 void checkLeftLights()	{
-	if(!leftLightsOn	&&	digitalRead(LEFT_LIGHT))	{
+	if(!leftLightsOn && digitalRead(LEFT_LIGHT))	{
 		digitalWrite(LEFT_LIGHT, HIGH);
 		leftLightsOn = !leftLightsOn;
 	}
@@ -114,7 +114,7 @@ void checkLeftLights()	{
 }
 
 void checkBrakeLights()	{
-	if(!brakeLightsOn	&&	digitalRead(BRAKE_LIGHT))	{
+	if(!brakeLightsOn && digitalRead(BRAKE_LIGHT))	{
 		digitalWrite(BRAKE_LIGHT, HIGH);
 		brakeLightsOn = !brakeLightsOn;
 	}
