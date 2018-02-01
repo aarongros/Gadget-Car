@@ -42,8 +42,10 @@ void print ()	{
 	unsigned char joy_y_axis;
 	unsigned char z_button;
 	unsigned char c_button;
+	int accel_x_axis;
 	joy_x_axis = buffer[0];
 	joy_y_axis = buffer[1];
+	accel_x_axis = (buffer[2]) << 2;
 	if ((buffer[5] & 0x01)!=0)
 	{ z_button = 1; }
 	else
@@ -52,6 +54,7 @@ void print ()	{
 	{ c_button = 1; }
 	else
 	{ c_button = 0; }
+	accel_x_axis += ((buffer[5]) >> 2) & 0x03;
 	
 	Serial.print (joy_x_axis, DEC);
 	Serial.print ("\t");
@@ -61,9 +64,11 @@ void print ()	{
 	Serial.print ("\t");
 	Serial.print (c_button, DEC);
 	Serial.print ("\r\n");
+	Serial.print (accel_x_axis, DEC);
+ 	Serial.print ("\t");
 }
 
 char nunchuk_decode_byte (char x)	{
- x = (x ^ 0x17) + 0x17;
- return x;
+	x = (x ^ 0x17) + 0x17;
+	return x;
 }
