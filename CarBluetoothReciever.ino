@@ -21,10 +21,14 @@ void setup()
 void loop()
 {
   if (ET.receiveData()) {
-    Serial.println(mydata.joy_x);
-    Serial.println(mydata.joy_y);
-    Serial.println(mydata.z_button);
-    Serial.println(mydata.c_button);
+    Serial.print(mydata.joy_x);
+    Serial.print("\t");
+    Serial.print(mydata.joy_y);
+    Serial.print("\t");
+    Serial.print(mydata.z_button);
+    Serial.print("\t");
+    Serial.print(mydata.c_button);
+    Serial.print("\t");
     Serial.println(mydata.accel_x);
   }
   delay(50);
