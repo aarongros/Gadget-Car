@@ -74,6 +74,7 @@ void checkDrive()	{
 	right_pwn_drive_speed = map(y_value, 0, 255, -255, 255);
 	analogWrite(RIGHT_PWM_DRIVE, right_pwn_drive_speed);
 	analogWrite(LEFT_PWM_DRIVE, 0);
+	Serial.print("Steer: " + right_pwm_drive_speed);
 }
 
 void checkTurn()	{
@@ -82,6 +83,7 @@ void checkTurn()	{
 	if(!((steet_pot >= 950 && right_pwn_steer_speed > 0) || (steer_pot <= 75 && right_pwn_steer_speed < 0))	{
 		analogWrite(RIGHT_PWM_STEER, right_pwn_steer_speed);
 		analogWrite(LEFT_PWM_STEER, 0);
+		Serial.print("Steer: " + right_pwm_steer_speed);
 	}
 }
 
@@ -97,10 +99,12 @@ void checkHeadLights()	{
 	if(!headLightsOn && z_button)	{
 		digitalWrite(HEAD_LIGHT, HIGH);
 		headLightsdOn = !headLightsdOn;
+		Serial.print("Started Head Lights");
 	}
 	else if(headLightsdOn && !z_button)	{
 		digitalWrite(HEAD_LIGHT, LOW);
 		headLightsdOn = !headLightsdOn;
+		Serial.print("Stopped Head Lights");
 	}
 }
 
@@ -108,10 +112,12 @@ void checkHazards()	{
 	if(!hazardsOn && c_button)	{
 		digitalWrite(HAZARD_LIGHT, HIGH);
 		hazardsOn = !hazardsOn;
+		Serial.print("Started Hazard Lights");
 	}
 	else if(hazardsOn && !c_button)	{
 		digitalWrite(HAZARD_LIGHT, LOW);
 		hazardsOn = !hazardsOn;
+		Serial.print("Stopped Hazard Lights");
 	}
 }
 
@@ -119,10 +125,12 @@ void checkRightLights()	{
 	if(!rightLightsOn && right_pwm_steer_speed > 50)	{
 		digitalWrite(RIGHT_LIGHT, HIGH);
 		rightLightsOn = !rightLightsOn;
+		Serial.print("Started Right Lights");
 	}
 	else if(rightLightsOn && !(right_pwm_steer_speed > 50))	{
 		digitalWrite(RIGHT_LIGHT, LOW);
 		rightLightsOn = !rightLightsOn;
+		Serial.print("Stoped Right Lights");
 	}
 }
 
@@ -130,10 +138,12 @@ void checkLeftLights()	{
 	if(!leftLightsOn && right_pwm_steer_speed < 50)	{
 		digitalWrite(LEFT_LIGHT, HIGH);
 		leftLightsOn = !leftLightsOn;
+		Serial.print("Started Left Lights");
 	}
 	else if(leftLightsOn && !(right_pwm_steer_speed < 50))	{
 		digitalWrite(LEFT_LIGHT, LOW);
 		leftLightsOn = !leftLightsOn;
+		Serial.print("Stoped Left Lights");
 	}
 }
 
@@ -141,9 +151,11 @@ void checkBrakeLights()	{
 	if(!brakeLightsOn && right_pwm_drive_speed < 50)	{
 		digitalWrite(BRAKE_LIGHT, HIGH);
 		brakeLightsOn = !brakeLightsOn;
+		Serial.print("Started Brake Lights");
 	}
 	else if(brakeLightsdOn && !(right_pwm_drive_speed < 50))	{
 		digitalWrite(BRAKE_LIGHT, LOW);
 		brakeLightsOn = !brakeLightsOn;
+		Serial.print("Stoped Brake Lights");
 	}
 }
