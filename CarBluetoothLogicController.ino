@@ -1,7 +1,3 @@
-//Needs to send signals to arduino micro vie digital pings 3-7 to tell it which lights to turn on and off
-//needs to recieve bluetooth data from the joystick and the app
-//needs to use that data to steer and change velocity
-
 #include <EasyTransfer.h>
 EasyTransfer ET;
 
@@ -58,32 +54,54 @@ void setup()  {
 
 void loop() {
   if (ET.receiveData()) {
-    x_value = mydata.joy_x;
+      x_value = mydata.joy_x;
       y_value = mydata.joy_y;
-        c_button = mydata.z_button;
-        c_button = mydata.c_button;
-        accel_x = mydata.accel_x;
-    }
+      c_button = mydata.z_button;
+      c_button = mydata.c_button;
+      accel_x = mydata.accel_x;
+      Serial.print(mydata.joy_x);
+      Serial.print("\t");
+      Serial.print(mydata.joy_y);
+      Serial.print("\t");
+      Serial.print(mydata.z_button);
+      Serial.print("\t");
+      Serial.print(mydata.c_button);
+      Serial.print("\t");
+      Serial.println(mydata.accel_x);
+  }
   checkLights();
   checkDrive();
   checkTurn();
-  delay(50);
+  delay(2000);
 }
 
 void checkDrive() {
   right_pwm_drive_speed = map(y_value, 0, 255, -255, 255);
-  analogWrite(RIGHT_PWM_DRIVE, right_pwm_drive_speed);
-  analogWrite(LEFT_PWM_DRIVE, 0);
-  Serial.print("Steer: " + right_pwm_drive_speed);
+  if(right_pwm_drive_speed >= 0) {
+    analogWrite(RIGHT_PWM_DRIVE, right_pwm_drive_speed);
+    analogWrite(LEFT_PWM_DRIVE, 0);
+  }
+  else if(right_pwm_drive_speed < 0)  {
+    analogWrite(RIGHT_PWM_DRIVE, 0);
+    analogWrite(LEFT_PWM_DRIVE, (-1 * right_pwm_drive_speed));
+  }
+  
+  Serial.print("DRIVE: " + right_pwm_drive_speed);
 }
 
 void checkTurn()  {
   steer_pot = analogRead(STEER_INPUT);
   right_pwm_steer_speed = map(x_value, 0, 255, -255, 255);
   if(!((steer_pot >= 950 && right_pwm_steer_speed > 0) || (steer_pot <= 75 && right_pwm_steer_speed < 0))) {
-    analogWrite(RIGHT_PWM_STEER, right_pwm_steer_speed);
-    analogWrite(LEFT_PWM_STEER, 0);
-    Serial.print("Steer: " + right_pwm_steer_speed);
+    if(right_pwm_steer_speed >= 0) {
+      analogWrite(RIGHT_PWM_STEER, right_pwm_steer_speed);
+      analogWrite(LEFT_PWM_STEER, 0);
+    }
+    else if(right_pwm_drive_speed < 0)  {
+      analogWrite(RIGHT_PWM_STEER, 0);
+      analogWrite(LEFT_PWM_STEER, (-1 * right_pwm_steer_speed));
+    }
+    Serial.print("STEER: " + right_pwm_steer_speed);
   }
 }
 
