@@ -61,7 +61,7 @@ void loop(){
   mydata.c_button = int(c_button);
   mydata.accel_x = accel_x_axis;
   ET.sendData();
-  delay(100);
+  delay(4000);
 }
 
 void send_zero () {
