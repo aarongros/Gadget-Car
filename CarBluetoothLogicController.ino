@@ -56,7 +56,7 @@ void loop() {
   if (ET.receiveData()) {
       x_value = mydata.joy_x;
       y_value = mydata.joy_y;
-      c_button = mydata.z_button;
+      z_button = mydata.z_button;
       c_button = mydata.c_button;
       accel_x = mydata.accel_x;
       Serial.print(mydata.joy_x);
@@ -72,36 +72,43 @@ void loop() {
   checkLights();
   checkDrive();
   checkTurn();
-  delay(2000);
+  delay(1000);
 }
 
 void checkDrive() {
-  right_pwm_drive_speed = map(y_value, 0, 255, -255, 255);
+  right_pwm_drive_speed = map(y_value, 33, 225, -255, 255);
+  int d = right_pwm_drive_speed;
   if(right_pwm_drive_speed >= 0) {
     analogWrite(RIGHT_PWM_DRIVE, right_pwm_drive_speed);
     analogWrite(LEFT_PWM_DRIVE, 0);
+    Serial.print("Drive F: ");
+      Serial.println(d);
   }
   else if(right_pwm_drive_speed < 0)  {
     analogWrite(RIGHT_PWM_DRIVE, 0);
     analogWrite(LEFT_PWM_DRIVE, (-1 * right_pwm_drive_speed));
+    Serial.print("Drive B: ");
+      Serial.println(d);
   }
-  
-  Serial.print("DRIVE: " + right_pwm_drive_speed);
 }
 
 void checkTurn()  {
   steer_pot = analogRead(STEER_INPUT);
-  right_pwm_steer_speed = map(x_value, 0, 255, -255, 255);
+  right_pwm_steer_speed = map(x_value, 25 , 223, -255, 255);
+  int prints = right_pwm_steer_speed;
   if(!((steer_pot >= 950 && right_pwm_steer_speed > 0) || (steer_pot <= 75 && right_pwm_steer_speed < 0))) {
     if(right_pwm_steer_speed >= 0) {
+      Serial.print("Steer R: ");
+      Serial.println(prints);
       analogWrite(RIGHT_PWM_STEER, right_pwm_steer_speed);
       analogWrite(LEFT_PWM_STEER, 0);
     }
-    else if(right_pwm_drive_speed < 0)  {
+    else if(right_pwm_steer_speed < 0)  {
+      Serial.print("Steer L: ");
+      Serial.println(prints);
       analogWrite(RIGHT_PWM_STEER, 0);
       analogWrite(LEFT_PWM_STEER, (-1 * right_pwm_steer_speed));
     }
-    Serial.print("STEER: " + right_pwm_steer_speed);
   }
 }
 
@@ -114,28 +121,24 @@ void checkLights()  {
 }
 
 void checkHeadLights()  {
-  if(!headLightsOn && z_button) {
+  if(!headLightsOn && !z_button) {
     digitalWrite(HEAD_LIGHT, HIGH);
     headLightsOn = !headLightsOn;
-    Serial.print("Started Head Lights");
   }
-  else if(headLightsOn && !z_button) {
+  else if(headLightsOn && z_button) {
     digitalWrite(HEAD_LIGHT, LOW);
     headLightsOn = !headLightsOn;
-    Serial.print("Stopped Head Lights");
   }
 }
 
 void checkHazards() {
-  if(!hazardsOn && c_button)  {
+  if(!hazardsOn && !c_button)  {
     digitalWrite(HAZARD_LIGHT, HIGH);
     hazardsOn = !hazardsOn;
-    Serial.print("Started Hazard Lights");
   }
-  else if(hazardsOn && !c_button) {
+  else if(hazardsOn && c_button) {
     digitalWrite(HAZARD_LIGHT, LOW);
     hazardsOn = !hazardsOn;
-    Serial.print("Stopped Hazard Lights");
   }
 }
 
@@ -143,37 +146,31 @@ void checkRightLights() {
   if(!rightLightsOn && right_pwm_steer_speed > 50)  {
     digitalWrite(RIGHT_LIGHT, HIGH);
     rightLightsOn = !rightLightsOn;
-    Serial.print("Started Right Lights");
   }
   else if(rightLightsOn && !(right_pwm_steer_speed > 50)) {
     digitalWrite(RIGHT_LIGHT, LOW);
     rightLightsOn = !rightLightsOn;
-    Serial.print("Stoped Right Lights");
   }
 }
 
 void checkLeftLights()  {
-  if(!leftLightsOn && right_pwm_steer_speed < 50) {
+  if(!leftLightsOn && right_pwm_steer_speed < -50) {
     digitalWrite(LEFT_LIGHT, HIGH);
     leftLightsOn = !leftLightsOn;
-    Serial.print("Started Left Lights");
   }
-  else if(leftLightsOn && !(right_pwm_steer_speed < 50))  {
+  else if(leftLightsOn && !(right_pwm_steer_speed < -50))  {
     digitalWrite(LEFT_LIGHT, LOW);
     leftLightsOn = !leftLightsOn;
-    Serial.print("Stoped Left Lights");
   }
 }
 
 void checkBrakeLights() {
-  if(!brakeLightsOn && right_pwm_drive_speed < 50)  {
+  if(!brakeLightsOn && right_pwm_drive_speed < -50)  {
     digitalWrite(BRAKE_LIGHT, HIGH);
     brakeLightsOn = !brakeLightsOn;
-    Serial.print("Started Brake Lights");
   }
-  else if(brakeLightsOn && !(right_pwm_drive_speed < 50))  {
+  else if(brakeLightsOn && !(right_pwm_drive_speed < -50))  {
     digitalWrite(BRAKE_LIGHT, LOW);
     brakeLightsOn = !brakeLightsOn;
-    Serial.print("Stoped Brake Lights");
   }
 }
