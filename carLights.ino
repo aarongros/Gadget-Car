@@ -13,6 +13,7 @@ boolean leftAndBraking = false;
 boolean rightAndBraking = false;
 boolean brakingOn = false;
 boolean headlightsOn = false;
+boolean allLightsOff = false;
 
 // Setup the headlights, back lights, and all the inputs describing the state of each function
 void setup()  {
@@ -39,11 +40,11 @@ void loop() {
 
 // Checks if headlights should change state and changes it if necessary
 void checkHeadLights()  {
-  if(digitalRead(HEADLIGHTS_INPUT).equals(HIGH) && !headlightsOn)  {
+  if(digitalRead(HEADLIGHTS_INPUT)==1 && !headlightsOn)  {
     digitalWrite(HEADLIGHTS,HIGH);
     headlightsOn = !headlightsOn;
   }
-  else if(digitalRead(HEADLIGHTS_INPUT).equals(LOW) && headlightsOn) {
+  else if(digitalRead(HEADLIGHTS_INPUT)==0 && headlightsOn) {
     digitalWrite(HEADLIGHTS,LOW);
     headlightsOn = !headlightsOn;
   }
@@ -51,7 +52,7 @@ void checkHeadLights()  {
 
 // Checks if the hazards should change state and changes it if necessary
 void checkHazards() {
-  if(digitalRead(HAZARDS_INPUT).equals(HIGH)) {
+  if(digitalRead(HAZARDS_INPUT)==1 && !(digitalRead(LEFT_INPUT)==1 || digitalRead(RIGHT_INPUT)==1)) {
     hazardLights();
   }
 }
@@ -74,11 +75,13 @@ void checkTurning() {
 
 // Checks if the brake lights should change state and changes it if necessary
 void checkBraking() {
-  if(digitalRead(BREAKING_INPUT).equals(HIGH) && !brakingOn)  {
+  if(digitalRead(BREAKING_INPUT)==1 && (!brakingOn || allLightsOff) && (digitalRead(HAZARDS_INPUT)==0 || (digitalRead(LEFT_INPUT)==1) || digitalRead(RIGHT_INPUT)==1))  {
     brakeLights();
-    brakingOn = !brakingOn;
+    if(!allLightsOff)
+      brakingOn = !brakingOn;
+    allLightsOff = false;
   }
-  else if(digitalRead(BREAKING_INPUT).equals(LOW) && brakingOn) {
+  else if(digitalRead(BREAKING_INPUT)==0 && brakingOn) {
     allOff();
     brakingOn = !brakingOn;
   }
@@ -86,14 +89,14 @@ void checkBraking() {
 
 // Makes sure there are no errors when turning and braking
 checkTurningAndBraking()  {
-  if(digitalRead(LEFT_INPUT).equals(LOW) && leftAndBraking)  {
+  if(digitalRead(LEFT_INPUT)==0 && leftAndBraking && brakingOn)  {
     for(int tb = 0; tb < NUM_LIGHTS; tb++)  {
       digitalWrite(LEFT_LIGHTS[tb], HIGH);
       delay(WAIT_TIME);
     }
-    leftAndBraking = false;     
+    leftAndBraking = false;
   } 
-  if(digitalRead(RIGHT_INPUT).equals(LOW) && rightAndBraking)  {
+  if(digitalRead(RIGHT_INPUT)==0 && rightAndBraking && brakingOn)  {
     for(int rb = 0; rb < NUM_LIGHTS; rb++)  {
       digitalWrite(RIGHT_LIGHTS[rb], HIGH);
       delay(WAIT_TIME);
@@ -125,7 +128,10 @@ void turnRightBlincker()  {
 // Turns on the hazard lights
 void hazardLights()  {
   brakeLights();
-  allOff();
+  if(digitalRead(HAZARDS_INPUT)==1 || digitalRead(BREAKING_INPUT)==1)  {
+    allOff();
+    allLightsOff = true;
+  }
   delay(WAIT_TIME);
 }
 
