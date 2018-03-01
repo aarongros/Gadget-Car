@@ -72,7 +72,7 @@ void loop() {
   checkLights();
   checkDrive();
   checkTurn();
-  delay(1000);
+  delay(50);
 }
 
 void checkDrive() {
