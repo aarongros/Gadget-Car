@@ -28,7 +28,10 @@ void setup(){
   Wire.write (0x40);
   Wire.write (0x00);
   Wire.endTransmission ();
-  delay (100);  
+  delay (100);
+  while(!Serial.available())  {
+  }
+  Serial.println("Nunchuck Connected");
 }
 
 void loop(){
