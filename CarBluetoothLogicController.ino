@@ -94,20 +94,16 @@ void checkDrive() {
 
 void checkTurn()  {
   steer_pot = analogRead(STEER_INPUT);
-  right_pwm_steer_speed = map(x_value, 25 , 223, -255, 255);
-  int prints = right_pwm_steer_speed;
-  if(!((steer_pot >= 950 && right_pwm_steer_speed > 0) || (steer_pot <= 75 && right_pwm_steer_speed < 0))) {
-    if(right_pwm_steer_speed >= 0) {
-      Serial.print("Steer R: ");
-      Serial.println(prints);
-      analogWrite(RIGHT_PWM_STEER, right_pwm_steer_speed);
+  right_pwm_steer_speed = map(x_value, 25 , 223, 0, 1023);
+  if(((steer_pot >= 900 && right_pwm_steer_speed < 900) || (steer_pot <= 100 && right_pwm_steer_speed > 100) || (steer_pot < 900 && steer_pot > 100)) 
+     && ((right_pwm_steer_speed < steer_pot - 10) || (right_pwm_steer_speed > steer_pot + 10))) {
+    if(right_pwm_steer_speed < steer_pot) {
+      analogWrite(RIGHT_PWM_STEER, 255);
       analogWrite(LEFT_PWM_STEER, 0);
     }
-    else if(right_pwm_steer_speed < 0)  {
-      Serial.print("Steer L: ");
-      Serial.println(prints);
+    else if(right_pwm_steer_speed > steer_pot)  {
       analogWrite(RIGHT_PWM_STEER, 0);
-      analogWrite(LEFT_PWM_STEER, (-1 * right_pwm_steer_speed));
+      analogWrite(LEFT_PWM_STEER, 255);
     }
   }
 }
