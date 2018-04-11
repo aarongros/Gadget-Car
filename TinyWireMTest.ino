@@ -1,16 +1,11 @@
-/* ATtiny85 as an I2C Master  Ex1          BroHogan                      1/21/11
- * I2C master reading DS1621 temperature sensor. (display with leds)
+/*TinyWireM: https://github.com/adafruit/TinyWireM
  * SETUP:
  * ATtiny Pin 1 = (RESET) N/U                      ATtiny Pin 2 = (D3) LED3
  * ATtiny Pin 3 = (D4) to LED1                     ATtiny Pin 4 = GND
  * ATtiny Pin 5 = SDA on DS1621                    ATtiny Pin 6 = (D1) to LED2
  * ATtiny Pin 7 = SCK on DS1621                    ATtiny Pin 8 = VCC (2.7-5.5V)
- * NOTE! - It's very important to use pullups on the SDA & SCL lines!
+ *
  * DS1621 wired per data sheet. This ex assumes A0-A2 are set LOW for an addeess of 0x48
- * TinyWireM USAGE & CREDITS: - see TinyWireM.h
- * NOTES:
- * The ATtiny85 + DS1621 draws 1.7mA @5V when leds are not on and not reading temp.
- * Using sleep mode, they draw .2 @5V @ idle - see http://brownsofa.org/blog/archives/261
  */
 
 #include <TinyWireM.h>                  // I2C Master lib for ATTinys which use USI
