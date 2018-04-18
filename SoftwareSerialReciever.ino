@@ -40,4 +40,5 @@ void loop() {
   if(data.next().equals("ax")) {
     int x_accel = data.next();
   }
+  Serial.write("x_axis: " + x_axis + "\ty_axis: " + y_axis + "\tz_button: " + z_button + "\tc_button: " + c_button + "\tx_accel: " + x_accel + "\n");
 }
