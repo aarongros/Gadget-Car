@@ -1,34 +1,36 @@
-//  https://github.com/madsci1016/Arduino-EasyTransfer
-#include <EasyTransfer.h>
 #include <Wire.h>
+#include <SoftwareSerial.h>
+SoftwareSerial mySerial(10, 11);
 #define nunchuk_ID 0x52
 unsigned char buffer[6];
 int count = 0;
-EasyTransfer ET; 
 unsigned char joy_x_axis;
 unsigned char joy_y_axis;
 unsigned char z_button;
 unsigned char c_button;
+int x_axis;
+int y_axis;
+int z;
+int c;
 int accel_x_axis;
-struct SEND_DATA_STRUCTURE{
-  int joy_x;
-  int joy_y;
-  int z_button;
-  int c_button;
-  int accel_x;
-};
 
-SEND_DATA_STRUCTURE mydata;
 
 void setup(){
   Serial.begin(9600);
-  ET.begin(details(mydata), &Serial);
   Wire.begin ();
   Wire.beginTransmission (nunchuk_ID);
   Wire.write (0x40);
   Wire.write (0x00);
   Wire.endTransmission ();
+  Serial.begin(57600);
+  while (!Serial) {
+    ;
+  }
   delay (100);
+  Serial.println("Connected");
+
+  mySerial.begin(9600);
+  mySerial.println("Connected");
 }
 
 void loop(){
@@ -55,12 +57,16 @@ void loop(){
   send_zero ();
   
   
-  mydata.joy_x = int(joy_x_axis);
-  mydata.joy_y = int(joy_y_axis);
-  mydata.z_button = int(z_button);
-  mydata.c_button = int(c_button);
-  mydata.accel_x = accel_x_axis;
-  ET.sendData();
+  x_axis = int(joy_x_axis);
+  y_axis = int(joy_y_axis);
+  z = int(z_button);
+  c = int(c_button);
+  if (mySerial.available()) {
+    Serial.write(mySerial.read());
+  }
+  if (Serial.available()) {
+    mySerial.write("x: " + x_axis + "\ty: " + y_axis + "\tz: " + z + "\tc: " + c + "\tax: " + accel_x_axis + "\n");
+  }
   delay(100);
 }
 
