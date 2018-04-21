@@ -22,6 +22,18 @@ const int RIGHT_PWM_STEER = 10;
 const int LEFT_PWM_STEER = 9;
 const int DRIVE_ENABLE = 8;
 const int BLUETOOTH_VCC = 2;
+const int TRIG_PIN_FRONT = 22;
+const int ECHO_PIN_FRONT = 23;
+const int TRIG_PIN_FRONT_LEFT = 24;
+const int ECHO_PIN_FRONT_LEFT = 25;
+const int TRIG_PIN_FRONT_RIGHT = 26;
+const int ECHO_PIN_FRONT_RIGHT = 27;
+const int TRIG_PIN_BACK = 28;
+const int ECHO_PIN_BACK = 29;
+const int TRIG_PIN_BACK_LEFT = 30;
+const int ECHO_PIN_BACK_LEFT = 31;
+const int TRIG_PIN_BACK_RIGHT = 32;
+const int ECHO_PIN_BACK_RIGHT = 33;
 #define STEER_INPUT A0
 
 //Instantiating all the variables needed for the logic
@@ -40,6 +52,18 @@ bool brakeLightsOn = false;
 bool leftLightsOn = false;
 bool rightLightsOn = false;
 bool hazardsOn = false;
+long durationFront;
+int distanceFront;
+long durationFrontLeft;
+int distanceFrontLeft;
+long durationFrontRight;
+int distanceFrontRight;
+long durationBack;
+int distanceBack;
+long durationBackLeft;
+int distanceBackLeft;
+long durationBackRight;
+int distanceBackRight;
 
 void setup()  {
   Serial.begin(9600); //Begin Serial to recieve data
@@ -58,7 +82,19 @@ void setup()  {
   pinMode(STEER_INPUT, INPUT);
   pinMode(DRIVE_ENABLE, OUTPUT);
   pinMode(BLUETOOTH_VCC, OUTPUT);
-  
+  pinMode(TRIG_PIN_FRONT, OUTPUT);
+  pinMode(ECHO_PIN_FRONT, INPUT);
+  pinMode(TRIG_PIN_FRONT_LEFT, OUTPUT);
+  pinMode(ECHO_PIN_FRONT_LEFT, INPUT);
+  pinMode(TRIG_PIN_FRONT_RIGHT, OUTPUT);
+  pinMode(ECHO_PIN_FRONT_RIGHT, INPUT);
+  pinMode(TRIG_PIN_BACK, OUTPUT);
+  pinMode(ECHO_PIN_BACK, INPUT);
+  pinMode(TRIG_PIN_BACK_LEFT, OUTPUT);
+  pinMode(ECHO_PIN_BACK_LEFT, INPUT);
+  pinMode(TRIG_PIN_BACK_RIGHT, OUTPUT);
+  pinMode(ECHO_PIN_BACK_RIGHT, INPUT);
+    
   digitalWrite(BLUETOOTH_VCC, HIGH);  //Set bluetooth high in code to facilitate uploading code since TX and RX won't intervene this way
   digitalWrite(DRIVE_ENABLE, HIGH); //Set Drive enable to the motor driver for the back wheels will activate
 }
@@ -170,4 +206,47 @@ void checkBrakeLights() {
     digitalWrite(BRAKE_LIGHT, LOW);
     brakeLightsOn = !brakeLightsOn;
   }
+}
+
+void scanSurroundings() { //Reads all the ultrasonic values and finds their distances
+  //Clears the TRIN_PINs
+  digitalWrite(TRIG_PIN_FRONT, LOW);
+  digitalWrite(TRIG_PIN_FRONT_LEFT, LOW);
+  digitalWrite(TRIG_PIN_FRONT_RIGHT, LOW);
+  digitalWrite(TRIG_PIN_BACK, LOW);
+  digitalWrite(TRIG_PIN_BACK_LEFT, LOW);
+  digitalWrite(TRIG_PIN_BACK_RIGHT, LOW);
+  delayMicroseconds(2);
+  
+  //Sets the TRIG_PINs HIGH for 10 micro seconds
+  digitalWrite(TRIG_PIN_FRONT, HIGH);
+  digitalWrite(TRIG_PIN_FRONT_LEFT, HIGH);
+  digitalWrite(TRIG_PIN_FRONT_RIGHT, HIGH);
+  digitalWrite(TRIG_PIN_BACK, HIGH);
+  digitalWrite(TRIG_PIN_BACK_LEFT, HIGH);
+  digitalWrite(TRIG_PIN_BACK_RIGHT, HIGH);
+  delayMicroseconds(10);
+  
+  digitalWrite(TRIG_PIN_FRONT, LOW);
+  digitalWrite(TRIG_PIN_FRONT_LEFT, LOW);
+  digitalWrite(TRIG_PIN_FRONT_RIGHT, LOW);
+  digitalWrite(TRIG_PIN_BACK, LOW);
+  digitalWrite(TRIG_PIN_BACK_LEFT, LOW);
+  digitalWrite(TRIG_PIN_BACK_RIGHT, LOW);
+  
+  //Reads the echoPin, returns the sound wave travel time in microseconds
+  durationFront = pulseIn(ECHO_PIN_FRONT, HIGH);
+  durationFrontLeft = pulseIn(ECHO_PIN_FRONT_LEFT, HIGH);
+  durationFrontRight = pulseIn(ECHO_PIN_FRONT_RIGHT, HIGH);
+  durationBack = pulseIn(ECHO_PIN_BACK, HIGH);
+  durationBackLeft = pulseIn(ECHO_PIN_BACK_LEFT, HIGH);
+  durationBackRight = pulseIn(ECHO_PIN_BACK_RIGHT, HIGH);
+  
+  // Calculating the distance
+  distanceFront = durationFront*0.034/2;
+  distanceFrontLeft = durationFrontLeft*0.034/2;
+  distanceFrontRight = durationFrontRight*0.034/2;
+  distanceBack = durationBack*0.034/2;
+  distanceBackLeft = durationBackLeft*0.034/2;
+  distanceBackRight = durationBackRight*0.034/2;
 }
