@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".ControlActivity">
+
+    <io.github.controlwear.virtual.joystick.android.JoystickView
+        android:id="@+id/joystick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:JV_backgroundColor="@color/colorPrimaryDark"
+        app:JV_buttonColor="@color/colorAccent" />
+
+    <Switch
+        android:id="@+id/headlightsSwitch"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Headlights"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toEndOf="@+id/joystick"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/hazardsSwitch"
+        android:layout_width="0dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="8dp"
+        android:text="Hazards"
+        app:layout_constraintEnd_toEndOf="@+id/headlightsSwitch"
+        app:layout_constraintStart_toStartOf="@+id/headlightsSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/headlightsSwitch" />
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/joystick"
+        app:layout_constraintTop_toBottomOf="@+id/hazardsSwitch">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/joystick"
+            app:layout_constraintTop_toBottomOf="@+id/hazardsSwitch">
+
+            <Switch
+                android:id="@+id/leftBlinkerSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="32dp"
+                android:text="L"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="64dp"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="8dp"
+                android:text="R"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/rightBlinkerSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+
+</android.support.constraint.ConstraintLayout>
