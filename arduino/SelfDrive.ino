@@ -75,30 +75,54 @@ void setup()  {
 }
 
 void loop() {
+  bool backup = false;
+  steer_pot = analogRead(STEER_INPUT);
   if(distanceFront > 20)  {
     if(distanceFrontLeft > 20 && distanceFrontRight > 20)  {
-      Straight
+      analogWrite(RIGHT_PWM_DRIVE, 175);
+      analogWrite(LEFT_PWM_DRIVE, 0);
     }
     else if(distanceFrontLeft < 20 && distanceFrontLeft > 5 && distanceFrontRight > 20) {
-      turn right
+      analogWrite(RIGHT_PWM_DRIVE, 175);
+      analogWrite(LEFT_PWM_DRIVE, 0);
+      if(!(steer_pot < 1023 && steer_pot > 800)) {
+        analogWrite(RIGHT_PWM_STEER, 255);
+        analogWrite(LEFT_PWM_STEER, 0);
+      }
     }
     else if(distanceFrontLeft > 20 && distanceFrontRight < 20 && distanceFrontRight > 5) {
-      turn left
+      analogWrite(RIGHT_PWM_DRIVE, 175);
+      analogWrite(LEFT_PWM_DRIVE, 0);
+      if(!(steer_pot < 200 && steer_pot > 0)) {
+        analogWrite(RIGHT_PWM_STEER, 0);
+        analogWrite(LEFT_PWM_STEER, 255);
+      }
     }
     else if(distanceFrontLeft < 5 || distanceFrontRight < 5) {
-      backup true
+      backup = true;
     }
   }
   if(backup && distanceBack > 20)  {
     if((distanceFrontLeft - distanceFrontRight) >= 0 && distanceBackRight > 20 && distanceBackLeft > 5) {
-      backup right
+      analogWrite(RIGHT_PWM_DRIVE, 0);
+      analogWrite(LEFT_PWM_DRIVE, 175);
+      if(!(steer_pot < 1023 && steer_pot > 800)) {
+        analogWrite(RIGHT_PWM_STEER, 255);
+        analogWrite(LEFT_PWM_STEER, 0);
+      }
     }
     else if((distanceFrontRight - distanceFrontLeft) >= 0 && distanceBackLeft > 20 && distanceBackRight > 5)  {
-      backup left
+      analogWrite(RIGHT_PWM_DRIVE, 0);
+      analogWrite(LEFT_PWM_DRIVE, 175);
+      if(!(steer_pot < 200 && steer_pot > 0)) {
+        analogWrite(RIGHT_PWM_STEER, 0);
+        analogWrite(LEFT_PWM_STEER, 255);
+      }
     }
   }
   else  {
-    stop
+    analogWrite(RIGHT_PWM_DRIVE, 0);
+    analogWrite(LEFT_PWM_DRIVE, 0);
   }
 }
 
