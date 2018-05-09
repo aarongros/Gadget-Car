@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 #include <EasyTransfer.h>
-char input;
+
 SoftwareSerial mySerial(7, 8);
 EasyTransfer ET; 
 
