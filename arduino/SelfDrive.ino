@@ -75,6 +75,7 @@ void setup()  {
 }
 
 void loop() {
+  scanSurroundings();
   bool backup = false;
   steer_pot = analogRead(STEER_INPUT);
   if(distanceFront > 20)  {
@@ -182,38 +183,47 @@ void brakeLight() {
 }
 
 void scanSurroundings() { //Reads all the ultrasonic values and finds their distances
-  //Clears the TRIN_PINs
+  digitalWrite(TRIG_PIN_FRONT, LOW);  //Clears the TRIN_PIN
+  delayMicroseconds(2); 
+  digitalWrite(TRIG_PIN_FRONT, HIGH); //Sets the TRIG_PIN HIGH for 10 micro seconds
+  delayMicroseconds(10);
   digitalWrite(TRIG_PIN_FRONT, LOW);
+  durationFront = pulseIn(ECHO_PIN_FRONT, HIGH);  //Reads the ECHO_PIN, returns the sound wave travel time in microseconds
+
   digitalWrite(TRIG_PIN_FRONT_LEFT, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN_FRONT_LEFT, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN_FRONT_LEFT, LOW);
+  durationFrontLeft = pulseIn(ECHO_PIN_FRONT_LEFT, HIGH);
+
+  digitalWrite(TRIG_PIN_FRONT_LEFT, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN_FRONT_RIGHT, HIGH);
+  delayMicroseconds(10);
   digitalWrite(TRIG_PIN_FRONT_RIGHT, LOW);
+  durationFrontRight = pulseIn(ECHO_PIN_FRONT_RIGHT, HIGH);
+
   digitalWrite(TRIG_PIN_BACK, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN_BACK, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN_BACK, LOW);
+  durationBack = pulseIn(ECHO_PIN_BACK, HIGH);
+  
   digitalWrite(TRIG_PIN_BACK_LEFT, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN_BACK_LEFT, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN_BACK_LEFT, LOW);
+  durationBack = pulseIn(ECHO_PIN_BACK_LEFT, HIGH);
+  
   digitalWrite(TRIG_PIN_BACK_RIGHT, LOW);
   delayMicroseconds(2);
-  
-  //Sets the TRIG_PINs HIGH for 10 micro seconds
-  digitalWrite(TRIG_PIN_FRONT, HIGH);
-  digitalWrite(TRIG_PIN_FRONT_LEFT, HIGH);
-  digitalWrite(TRIG_PIN_FRONT_RIGHT, HIGH);
-  digitalWrite(TRIG_PIN_BACK, HIGH);
-  digitalWrite(TRIG_PIN_BACK_LEFT, HIGH);
   digitalWrite(TRIG_PIN_BACK_RIGHT, HIGH);
   delayMicroseconds(10);
-  
-  digitalWrite(TRIG_PIN_FRONT, LOW);
-  digitalWrite(TRIG_PIN_FRONT_LEFT, LOW);
-  digitalWrite(TRIG_PIN_FRONT_RIGHT, LOW);
-  digitalWrite(TRIG_PIN_BACK, LOW);
-  digitalWrite(TRIG_PIN_BACK_LEFT, LOW);
   digitalWrite(TRIG_PIN_BACK_RIGHT, LOW);
-  
-  //Reads the echoPin, returns the sound wave travel time in microseconds
-  durationFront = pulseIn(ECHO_PIN_FRONT, HIGH);
-  durationFrontLeft = pulseIn(ECHO_PIN_FRONT_LEFT, HIGH);
-  durationFrontRight = pulseIn(ECHO_PIN_FRONT_RIGHT, HIGH);
-  durationBack = pulseIn(ECHO_PIN_BACK, HIGH);
-  durationBackLeft = pulseIn(ECHO_PIN_BACK_LEFT, HIGH);
-  durationBackRight = pulseIn(ECHO_PIN_BACK_RIGHT, HIGH);
+  durationBack = pulseIn(ECHO_PIN_BACK_RIGHT, HIGH);
   
   // Calculating the distance
   distanceFront = durationFront*0.034/2;
