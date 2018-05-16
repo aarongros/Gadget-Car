@@ -15,31 +15,20 @@ const int TRIG_PIN_FRONT_LEFT = 24;
 const int ECHO_PIN_FRONT_LEFT = 25;
 const int TRIG_PIN_FRONT_RIGHT = 26;
 const int ECHO_PIN_FRONT_RIGHT = 27;
-const int TRIG_PIN_BACK = 28;
-const int ECHO_PIN_BACK = 29;
-const int TRIG_PIN_BACK_LEFT = 30;
-const int ECHO_PIN_BACK_LEFT = 31;
-const int TRIG_PIN_BACK_RIGHT = 32;
-const int ECHO_PIN_BACK_RIGHT = 33;
+const int TRIG_PIN_BACK_LEFT = 28;
+const int ECHO_PIN_BACK_LEFT = 29;
+const int TRIG_PIN_BACK_RIGHT = 30;
+const int ECHO_PIN_BACK_RIGHT = 31;
 #define STEER_INPUT A0
 
 //Instantiating all the variables needed for the logic
 int steer_pot = 0;
-int right_pwm_steer_speed = 0;
-int right_pwm_drive_speed = 0;
-bool headLightsOn = false;
-bool brakeLightsOn = false;
-bool leftLightsOn = false;
-bool rightLightsOn = false;
-bool hazardsOn = false;
 long durationFront;
 int distanceFront;
 long durationFrontLeft;
 int distanceFrontLeft;
 long durationFrontRight;
 int distanceFrontRight;
-long durationBack;
-int distanceBack;
 long durationBackLeft;
 int distanceBackLeft;
 long durationBackRight;
@@ -64,8 +53,6 @@ void setup()  {
   pinMode(ECHO_PIN_FRONT_LEFT, INPUT);
   pinMode(TRIG_PIN_FRONT_RIGHT, OUTPUT);
   pinMode(ECHO_PIN_FRONT_RIGHT, INPUT);
-  pinMode(TRIG_PIN_BACK, OUTPUT);
-  pinMode(ECHO_PIN_BACK, INPUT);
   pinMode(TRIG_PIN_BACK_LEFT, OUTPUT);
   pinMode(ECHO_PIN_BACK_LEFT, INPUT);
   pinMode(TRIG_PIN_BACK_RIGHT, OUTPUT);
@@ -82,6 +69,7 @@ void loop() {
     if(distanceFrontLeft > 20 && distanceFrontRight > 20)  {
       analogWrite(RIGHT_PWM_DRIVE, 175);
       analogWrite(LEFT_PWM_DRIVE, 0);
+      allOff();
     }
     else if(distanceFrontLeft < 20 && distanceFrontLeft > 5 && distanceFrontRight > 20) {
       analogWrite(RIGHT_PWM_DRIVE, 175);
@@ -90,6 +78,8 @@ void loop() {
         analogWrite(RIGHT_PWM_STEER, 255);
         analogWrite(LEFT_PWM_STEER, 0);
       }
+      allOff();
+      digitalWrite(RIGHT_LIGHT, HIGH);
     }
     else if(distanceFrontLeft > 20 && distanceFrontRight < 20 && distanceFrontRight > 5) {
       analogWrite(RIGHT_PWM_DRIVE, 175);
@@ -98,12 +88,14 @@ void loop() {
         analogWrite(RIGHT_PWM_STEER, 0);
         analogWrite(LEFT_PWM_STEER, 255);
       }
+      allOff();
+      digitalWrite(LEFT_LIGHT, HIGH);
     }
     else if(distanceFrontLeft < 5 || distanceFrontRight < 5) {
       backup = true;
     }
   }
-  if(backup && distanceBack > 20)  {
+  if(backup)  {
     if((distanceFrontLeft - distanceFrontRight) >= 0 && distanceBackRight > 20 && distanceBackLeft > 5) {
       analogWrite(RIGHT_PWM_DRIVE, 0);
       analogWrite(LEFT_PWM_DRIVE, 175);
@@ -111,6 +103,9 @@ void loop() {
         analogWrite(RIGHT_PWM_STEER, 255);
         analogWrite(LEFT_PWM_STEER, 0);
       }
+      allOff();
+      digitalWrite(RIGHT_LIGHT, HIGH);
+      digitalWrite(BRAKE_LIGHT, HIGH);
     }
     else if((distanceFrontRight - distanceFrontLeft) >= 0 && distanceBackLeft > 20 && distanceBackRight > 5)  {
       analogWrite(RIGHT_PWM_DRIVE, 0);
@@ -119,67 +114,24 @@ void loop() {
         analogWrite(RIGHT_PWM_STEER, 0);
         analogWrite(LEFT_PWM_STEER, 255);
       }
+      allOff();
+      digitalWrite(LEFT_LIGHT, HIGH);
+      digitalWrite(BRAKE_LIGHT, HIGH);
     }
   }
   else  {
     analogWrite(RIGHT_PWM_DRIVE, 0);
     analogWrite(LEFT_PWM_DRIVE, 0);
-  }
-}
-
-void headLights()  {
-  if(!headLightsOn && !z_button) {  //If headlights are not on and the z button is pressed we turn the headlights on
-    digitalWrite(HEAD_LIGHT, HIGH);
-    headLightsOn = !headLightsOn;
-  }
-  else if(headLightsOn && z_button) { //If headlights are on and the z button is not pressed we turn the headlights off
-    digitalWrite(HEAD_LIGHT, LOW);
-    headLightsOn = !headLightsOn;
-  }
-}
-
-void hazards() {
-  if(!hazardsOn && !c_button)  {  //If hazards are not on and the c button is pressed we turn the hazards on
+    allOff();
     digitalWrite(HAZARD_LIGHT, HIGH);
-    hazardsOn = !hazardsOn;
-  }
-  else if(hazardsOn && c_button) {  //If hazards are on and the c button is not pressed we turn the hazards off
-    digitalWrite(HAZARD_LIGHT, LOW);
-    hazardsOn = !hazardsOn;
   }
 }
 
-void rightLights() {
-  if(!rightLightsOn && right_pwm_steer_speed > 50)  { //If the right signal is not on and the turn value is greater than 50 we turn the right blinker on
-    digitalWrite(RIGHT_LIGHT, HIGH);
-    rightLightsOn = !rightLightsOn;
-  }
-  else if(rightLightsOn && !(right_pwm_steer_speed > 50)) { //If the right signal is on and the turn value is not greater than 50 we turn the right blinker off
-    digitalWrite(RIGHT_LIGHT, LOW);
-    rightLightsOn = !rightLightsOn;
-  }
-}
-
-void leftLights()  {
-  if(!leftLightsOn && right_pwm_steer_speed < -50) {  //If the left signal is not on and the turn value is less than -50 we turn the left blinker on
-    digitalWrite(LEFT_LIGHT, HIGH);
-    leftLightsOn = !leftLightsOn;
-  }
-  else if(leftLightsOn && !(right_pwm_steer_speed < -50))  {  //If the left signal is on and the turn value is not less than -50 we turn the left blinker off
-    digitalWrite(LEFT_LIGHT, LOW);
-    leftLightsOn = !leftLightsOn;
-  }
-}
-
-void brakeLight() {
-  if(!brakeLightsOn && right_pwm_drive_speed < -50)  {  //If the brake lights are not on and the drive value is less than -50 we turn the brake lights on
-    digitalWrite(BRAKE_LIGHT, HIGH);
-    brakeLightsOn = !brakeLightsOn;
-  }
-  else if(brakeLightsOn && !(right_pwm_drive_speed < -50))  { //If the brake lights are on and the drive value is not less than -50 we turn the breake lights off
-    digitalWrite(BRAKE_LIGHT, LOW);
-    brakeLightsOn = !brakeLightsOn;
-  }
+void allOff() {
+  digitalWrite(BRAKE_LIGHT, LOW);
+  digitalWrite(LEFT_LIGHT, LOW);
+  digitalWrite(RIGHT_LIGHT, LOW);
+  digitalWrite(HAZARD_LIGHT, LOW);
 }
 
 void scanSurroundings() { //Reads all the ultrasonic values and finds their distances
@@ -203,13 +155,6 @@ void scanSurroundings() { //Reads all the ultrasonic values and finds their dist
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN_FRONT_RIGHT, LOW);
   durationFrontRight = pulseIn(ECHO_PIN_FRONT_RIGHT, HIGH);
-
-  digitalWrite(TRIG_PIN_BACK, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN_BACK, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN_BACK, LOW);
-  durationBack = pulseIn(ECHO_PIN_BACK, HIGH);
   
   digitalWrite(TRIG_PIN_BACK_LEFT, LOW);
   delayMicroseconds(2);
@@ -229,7 +174,6 @@ void scanSurroundings() { //Reads all the ultrasonic values and finds their dist
   distanceFront = durationFront*0.034/2;
   distanceFrontLeft = durationFrontLeft*0.034/2;
   distanceFrontRight = durationFrontRight*0.034/2;
-  distanceBack = durationBack*0.034/2;
   distanceBackLeft = durationBackLeft*0.034/2;
   distanceBackRight = durationBackRight*0.034/2;
 }
