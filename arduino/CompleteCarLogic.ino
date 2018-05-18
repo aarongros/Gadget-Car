@@ -1,17 +1,18 @@
 #include <SoftwareSerial.h>
 #include <EasyTransfer.h>
 
-SoftwareSerial mySerial(7, 8);
+SoftwareSerial mySerial(50, 51);
 EasyTransfer ET; 
 
-struct RECIEVE_DATA_STRUCTURE { //Instantiating the data structure with the same data types as the sender
+//Instantiating the data structure with the same data types as the sender
+struct RECEIVE_DATA_STRUCTURE{
   int16_t joy_x;
   int16_t joy_y;
   int16_t c;
   int16_t z;
   int16_t accel_x;
 };
-RECIEVE_DATA_STRUCTURE mydata;
+RECEIVE_DATA_STRUCTURE mydata;
 
 //Instantiate all variables representing inputs and outputs on the arduino
 const int RIGHT_LIGHT = 3;
@@ -30,7 +31,7 @@ const int BLUETOOTH_VCC = 2;
 //Instantiating all the variables needed for the logic
 int y_value = 0;
 int x_value = 0;
-int accel_x = 0;
+int accel_x_axis = 0;
 int accel_y = 0;
 int accel_z = 0;
 int steer_pot = 0;
@@ -69,16 +70,19 @@ void setup()  {
 
 void loop() {
   if (ET.receiveData()) { //When EasyTransfer recieves data we assign all the data structure's values to the class variables
-      x_value = mydata.joy_x;
-      y_value = mydata.joy_y;
-      z_button = mydata.z_button;
-      c_button = mydata.c_button;
-      accel_x = mydata.accel_x;
+    x_value = mydata.joy_x;
+    y_value = mydata.joy_y;
+    z_button = mydata.z;
+    c_button = mydata.c;
+    accel_x_axis = mydata.accel_x;
+    
+    Serial.print(mydata.joy_x);Serial.print("\t");Serial.print(mydata.joy_y);Serial.print("\t");Serial.print(mydata.c);Serial.print("\t");Serial.print(mydata.z);Serial.print("\t");Serial.println(mydata.accel_x);
+      
+    checkLights();  //Checks all the light logic
+    checkDrive();  //Checks the back motor logic
+    checkTurn();  //Checks the turning logic
   }
-  checkLights();  //Checks all the light logic
-  checkDrive();  //Checks the back motor logic
-  checkTurn();  //Checks the turning logic
-  delay(50);
+  delay(5);
 }
 
 void checkDrive() {
