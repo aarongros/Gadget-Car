@@ -1,12 +1,14 @@
-#include <TinyWireM.h>                  // I2C Master lib for ATTinys which use USI
+#include <TinyWireM.h>        // I2C Master lib for ATTinys which use USI
 #include <EasyTransfer.h>     //EasyTransfer library to facilitate sending the joystick values over bluetooth while making sure we get all the data
 #include <SoftwareSerial.h>   //Software Serial to facilitate serial communication through bluetooth
 
-#define RxD 1
-#define TxD 2
+#define RxD 2
+#define TxD 1
 
 SoftwareSerial mySerial(RxD, TxD);
 EasyTransfer ET;
+
+const int LED = 3;
 
 int count = 0;
 unsigned char buffer[6];
@@ -29,12 +31,20 @@ SEND_DATA_STRUCTURE mydata;
 void setup(){
   pinMode(RxD, INPUT);
   pinMode(TxD, OUTPUT);
+  pinMode(LED, OUTPUT);
   Serial.begin(9600);
   mySerial.begin(9600);
   ET.begin(details(mydata), &mySerial);
   TinyWireM.begin();
   i2c_setup();
-  delay (3000);
+  
+  for(int i = 0; i < 2, i++)  {
+    analogWrite(LED, 150);
+    delay(500);
+    analogWrite(LED, 150);
+    delay(250);
+  }
+  delay (1000);
 }
 
 void loop(){
