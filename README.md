@@ -1,17 +1,5 @@
 # Gadget-Car
 
-Device Selection: phone or joystick, collision avoidance or not.
-
-troubleshooting: fix drive back and forward and limit on steer, clean wiring
-
-collision avoidance: integrate ultrasonic
-
-app: finish app
-
-system integration: make controllable by joystick and app
-
-Battery: 4.6v over battery charger     .5 A
-
 Helicopter Link: file:///home/chronos/u-17d3cae9d5b91c75f7ad481d040f983b28b12752/Downloads/Gyropter-2013.pdf
 
 Software Serial: https://www.arduino.cc/en/Tutorial/SoftwareSerialExample
