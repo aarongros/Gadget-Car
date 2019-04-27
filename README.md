@@ -1,5 +1,9 @@
 # Gadget-Car
 
+Code for the bluetooth app to control the car and code for the arduinos on the car.
+
+Car uses one arduino to control the turn signals and headlights, and another arduino recieves the bluetooth signal, controls the driving, steering, and other arduino.
+
 Helicopter Link: file:///home/chronos/u-17d3cae9d5b91c75f7ad481d040f983b28b12752/Downloads/Gyropter-2013.pdf
 
 Software Serial: https://www.arduino.cc/en/Tutorial/SoftwareSerialExample
